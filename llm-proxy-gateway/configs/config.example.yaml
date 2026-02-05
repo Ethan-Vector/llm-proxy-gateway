@@ -1,0 +1,46 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+  request_body_max_bytes: 1048576   # 1 MiB
+  log_level: INFO
+
+auth:
+  enabled: true
+  # If empty, uses env var LLM_PROXY_API_KEYS. You can also set here.
+  api_keys: []
+
+rate_limit:
+  enabled: true
+  # token bucket: refill tokens per second; bucket capacity
+  per_key:
+    refill_per_sec: 2.0
+    capacity: 10
+
+routing:
+  default_provider: mock
+  # Optional strict allowlist. If empty -> allow all.
+  allowed_models:
+    - "mock:demo"
+    - "openai:gpt-4.1-mini"
+  # Provider selection by model prefix before ':' (e.g., 'openai', 'anthropic', 'mock')
+  providers:
+    mock:
+      kind: mock
+    openai:
+      kind: openai
+      base_url: "https://api.openai.com/v1"
+      api_key_env: "OPENAI_API_KEY"
+    anthropic:
+      kind: anthropic
+      base_url: "https://api.anthropic.com"
+      api_key_env: "ANTHROPIC_API_KEY"
+
+cache:
+  enabled: false
+  ttl_seconds: 60
+  max_items: 1024
+
+policies:
+  enabled: true
+  # Optional: reject prompts over this character length (rough guardrail)
+  max_prompt_chars: 50000

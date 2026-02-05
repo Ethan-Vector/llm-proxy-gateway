@@ -1,0 +1,8 @@
+services:
+  llm-proxy:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - LLM_PROXY_API_KEYS=dev-key
+    command: ["llm-proxy", "--config", "configs/config.example.yaml", "--host", "0.0.0.0", "--port", "8080"]
